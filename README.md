@@ -1,2 +1,1 @@
-# Daily-Coding-Challenge
-This repository contains my codes for the daily coding  challenges.
+A GitHub repository containing codes for a 100 days coding challenge is a centralized location for storing and sharing code solutions that are completed as part of a daily coding challenge. This repository includes multiple code files that are uploaded on a daily basis to reflect progress made in the challenge. The repository is organized in a manner that makes it easy to track the daily progress and navigate through the code files.  Overall, the repository is a valuable tool for tracking progress.
