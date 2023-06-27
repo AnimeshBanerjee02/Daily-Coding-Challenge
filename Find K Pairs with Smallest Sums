@@ -1,0 +1,40 @@
+#include <vector>
+#include <queue>
+
+class Solution {
+public:
+    vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+        vector<vector<int>> result;
+        
+        // Custom comparator for the priority queue
+        auto comparator = [](const vector<int>& a, const vector<int>& b) {
+            return (a[0] + a[1]) > (b[0] + b[1]);
+        };
+        
+        priority_queue<vector<int>, vector<vector<int>>, decltype(comparator)> pq(comparator);
+        
+        // Push the initial pairs into the priority queue
+        for (int i = 0; i < min(k, static_cast<int>(nums1.size())); i++) {
+            pq.push({nums1[i], nums2[0], 0});
+        }
+        
+        // Retrieve the k smallest pairs
+        while (!pq.empty() && k-- > 0) {
+            vector<int> current = pq.top();
+            pq.pop();
+            
+            int num1 = current[0];
+            int num2 = current[1];
+            int index2 = current[2];
+            
+            result.push_back({num1, num2});
+            
+            // Move to the next pair in nums2 for the current num1
+            if (index2 + 1 < nums2.size()) {
+                pq.push({num1, nums2[index2 + 1], index2 + 1});
+            }
+        }
+        
+        return result;
+    }
+};
