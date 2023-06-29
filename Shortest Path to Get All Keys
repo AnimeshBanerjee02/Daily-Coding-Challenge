@@ -1,0 +1,54 @@
+from typing import List
+from collections import deque
+
+class Solution:
+    def shortestPathAllKeys(self, grid: List[str]) -> int:
+        rows = len(grid)
+        cols = len(grid[0])
+        all_keys = set()
+        start_row, start_col = 0, 0
+
+        # Find the position of all keys and the starting point
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] == '@':
+                    start_row, start_col = i, j
+                elif grid[i][j].islower():
+                    all_keys.add(grid[i][j])
+
+        target_keys = len(all_keys)
+        queue = deque([(start_row, start_col, "", 0)])  # (row, col, acquired_keys, steps)
+        visited = set([(start_row, start_col, "")])
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        min_steps = float('inf')
+
+        while queue:
+            row, col, acquired_keys, steps = queue.popleft()
+
+            if len(acquired_keys) == target_keys:
+                min_steps = min(min_steps, steps)
+                continue
+
+            for dx, dy in directions:
+                new_row = row + dx
+                new_col = col + dy
+
+                if 0 <= new_row < rows and 0 <= new_col < cols:
+                    cell = grid[new_row][new_col]
+
+                    if cell == '#':
+                        continue
+
+                    if cell.isupper() and cell.lower() not in acquired_keys:
+                        continue
+
+                    new_keys = acquired_keys
+
+                    if cell.islower() and cell not in acquired_keys:
+                        new_keys = acquired_keys + cell
+
+                    if (new_row, new_col, new_keys) not in visited:
+                        visited.add((new_row, new_col, new_keys))
+                        queue.append((new_row, new_col, new_keys, steps + 1))
+
+        return min_steps if min_steps != float('inf') else -1
