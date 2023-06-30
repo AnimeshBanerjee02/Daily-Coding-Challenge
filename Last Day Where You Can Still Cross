@@ -1,0 +1,45 @@
+class Solution:
+    def latestDayToCross(self, row: int, col: int, cells: List[List[int]]) -> int:
+        def is_possible(matrix: List[List[int]], day: int) -> bool:
+            # Initialize a grid with all 1s (land)
+            grid = [[1] * col for _ in range(row)]
+            
+            # Set cells in the grid to 0 (water) up to the given day
+            for i in range(day):
+                r, c = cells[i][0] - 1, cells[i][1] - 1
+                grid[r][c] = 0
+            
+            # Perform breadth-first search starting from the top row
+            queue = [(0, c) for c in range(col) if grid[0][c] == 1]
+            visited = set(queue)
+            
+            while queue:
+                r, c = queue.pop(0)
+                
+                if r == row - 1:
+                    return True  # Reached the bottom row
+                
+                # Explore the neighboring cells
+                for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                    nr, nc = r + dr, c + dc
+                    
+                    if 0 <= nr < row and 0 <= nc < col and grid[nr][nc] == 1 and (nr, nc) not in visited:
+                        queue.append((nr, nc))
+                        visited.add((nr, nc))
+                        grid[nr][nc] = 0  # Mark the cell as visited (water)
+            
+            return False  # Unable to reach the bottom row
+        
+        # Perform binary search to find the last possible day
+        left = 0
+        right = len(cells)
+        
+        while left < right:
+            mid = left + (right - left + 1) // 2
+            
+            if is_possible(cells, mid):
+                left = mid
+            else:
+                right = mid - 1
+        
+        return left
