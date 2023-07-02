@@ -1,0 +1,43 @@
+#include <vector>
+#include <algorithm>
+
+class Solution {
+public:
+    int maximumRequests(int n, std::vector<std::vector<int>>& requests) {
+        int maxRequests = 0;
+        int numRequests = requests.size();
+        std::vector<int> buildings(n, 0);
+
+        // Generate all possible combinations of request assignments
+        for (int i = 0; i < (1 << numRequests); i++) {
+            // Reset buildings count for each combination
+            std::fill(buildings.begin(), buildings.end(), 0);
+
+            // Assign requests based on the combination bitmask
+            for (int j = 0; j < numRequests; j++) {
+                if ((i & (1 << j)) != 0) {
+                    int fromBuilding = requests[j][0];
+                    int toBuilding = requests[j][1];
+                    buildings[fromBuilding]--;
+                    buildings[toBuilding]++;
+                }
+            }
+
+            // Check if the combination is valid
+            bool isValid = true;
+            for (int count : buildings) {
+                if (count != 0) {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            // Update maxRequests if the combination is valid and has more requests
+            if (isValid) {
+                maxRequests = std::max(maxRequests, __builtin_popcount(i));
+            }
+        }
+
+        return maxRequests;
+    }
+};
