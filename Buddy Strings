@@ -1,0 +1,26 @@
+class Solution:
+    def buddyStrings(self, s: str, goal: str) -> bool:
+        if len(s) != len(goal):
+            return False
+        
+        if s == goal:
+            # Check if there are any repeated characters in s
+            seen = set()
+            for char in s:
+                if char in seen:
+                    return True
+                seen.add(char)
+            return False
+
+        # Find the indices where the characters differ
+        indices = []
+        for i in range(len(s)):
+            if s[i] != goal[i]:
+                indices.append(i)
+        
+        if len(indices) != 2:
+            return False
+        
+        # Check if swapping the characters at the indices results in goal
+        i, j = indices
+        return s[i] == goal[j] and s[j] == goal[i]
